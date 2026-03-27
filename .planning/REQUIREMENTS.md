@@ -7,13 +7,13 @@
 
 ### Desktop Shell
 
-- [ ] **DESK-01**: User can launch Spiky as a transparent, always-on-top desktop overlay on macOS and Windows.
-- [ ] **DESK-02**: User can use a compact top control dock to view controls and drag the app without native window chrome.
-- [ ] **DESK-03**: User does not see browser-style scrollbars during normal use of the overlay window.
+- [x] **DESK-01**: User can launch Spiky as a transparent, always-on-top desktop overlay on macOS and Windows.
+- [x] **DESK-02**: User can use a compact top control dock to view controls and drag the app without native window chrome.
+- [x] **DESK-03**: User does not see browser-style scrollbars during normal use of the overlay window.
 
 ### Pet Presence
 
-- [ ] **PET-01**: User sees Spiky in its default idle state using `image_1` when the app is ready.
+- [x] **PET-01**: User sees Spiky in its default idle state using `image_1` when the app is ready.
 - [ ] **PET-02**: Spiky patrols horizontally within visible desktop bounds and visually reflects its movement direction.
 - [ ] **PET-03**: Clicking Spiky immediately switches it to the interaction state using `image_2`, then returns it to idle.
 
@@ -68,10 +68,10 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DESK-01 | Phase 1 | Pending |
-| DESK-02 | Phase 1 | Pending |
-| DESK-03 | Phase 1 | Pending |
-| PET-01 | Phase 1 | Pending |
+| DESK-01 | Phase 1 | Complete |
+| DESK-02 | Phase 1 | Complete |
+| DESK-03 | Phase 1 | Complete |
+| PET-01 | Phase 1 | Complete |
 | PET-02 | Phase 2 | Pending |
 | PET-03 | Phase 2 | Pending |
 | AUD-01 | Phase 2 | Pending |
