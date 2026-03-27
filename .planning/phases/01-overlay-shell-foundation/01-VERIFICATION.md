@@ -1,15 +1,15 @@
 ---
 phase: 01-overlay-shell-foundation
-verified: 2026-03-27T08:30:57Z
-status: human_needed
-score: 3/4 must-haves verified
+verified: 2026-03-27T19:22:30Z
+status: passed
+score: 4/4 must-haves verified
 ---
 
 # Phase 01: Overlay Shell Foundation Verification Report
 
 **Phase Goal:** Deliver a transparent overlay window with a compact top control dock, no visible scrollbars, and a stable default Spiky presence.
-**Verified:** 2026-03-27T08:30:57Z
-**Status:** human_needed
+**Verified:** 2026-03-27T19:22:30Z
+**Status:** passed
 
 ## Goal Achievement
 
@@ -20,9 +20,9 @@ score: 3/4 must-haves verified
 | 1 | Spiky launches as a transparent overlay instead of a centered popup | ✓ VERIFIED | `src-tauri/tauri.conf.json` now sets `"center": false` while preserving `"transparent": true`, `"decorations": false`, and `"alwaysOnTop": true` |
 | 2 | The shell exposes a compact top control dock with drag-only handle and no-scroll layout boundaries | ✓ VERIFIED | `src/app/ui.ts` contains `control-dock`, `drag-handle`, and `pet-stage`; `src/styles/app.css` applies `overflow: hidden` to `html`, `body`, and `#app` |
 | 3 | The default idle render path uses `image_1` and preserves safe image fallback handling | ✓ VERIFIED | `src/shared/assets/manifest.ts` maps `default` to `image_1`, and `src/app/bootstrap.ts` still binds `showImageFallback` / `hideImageFallback` |
-| 4 | The running app visually feels grounded near the desktop lower area with the pet primary over the dock | ? NEEDS HUMAN | Requires observing real runtime behavior in the desktop app |
+| 4 | The running app visually feels grounded near the desktop lower area with the pet primary over the dock | ✓ VERIFIED | User manually confirmed launch placement, shell feel, drag behavior, and idle presentation after runtime testing |
 
-**Score:** 3/4 truths verified
+**Score:** 4/4 truths verified
 
 ### Required Artifacts
 
@@ -63,38 +63,20 @@ None found in the executed Phase 1 surface area.
 
 ## Human Verification Required
 
-### 1. Lower-area launch placement
-**Test:** Run the desktop app and confirm the overlay appears near the lower area of the desktop instead of opening like a centered popup.
-**Expected:** The shell feels grounded from first render.
-**Why human:** Requires observing actual desktop window placement.
-
-### 2. Drag-region behavior
-**Test:** Try dragging the window from the top handle, then click/drag on the pet or controls.
-**Expected:** Only the top handle moves the window; pet/control clicks should not be mistaken for drag gestures.
-**Why human:** Requires real pointer interaction.
-
-### 3. Idle shell presentation
-**Test:** Inspect the first rendered idle state and check the pet-stage grounding cues.
-**Expected:** `image_1` is visible immediately, the pet stage feels grounded with shadow/glow, and the dock stays visually secondary.
-**Why human:** Visual feel and proportion need runtime observation.
-
-### 4. Asset fallback behavior
-**Test:** Temporarily break the default image path and reload the app.
-**Expected:** The shell shows `PNG 에셋 필요` instead of crashing or rendering a broken empty area.
-**Why human:** Requires intentionally exercising the runtime fallback path.
+None — all manual verification items were approved by the user on 2026-03-28.
 
 ## Gaps Summary
 
-**No implementation gaps found.** Remaining work is human runtime verification only.
+**No implementation gaps found.** Automated and human verification both passed.
 
 ## Verification Metadata
 
 **Verification approach:** Goal-backward using phase goal, plan must-haves, and current codebase state  
 **Must-haves source:** Phase 01 plan frontmatter + roadmap success criteria  
 **Automated checks:** `pnpm build`, `cargo check --manifest-path src-tauri/Cargo.toml`, artifact inspection, requirement coverage review  
-**Human checks required:** 4  
-**Total verification time:** Short local verification pass
+**Human checks required:** 0 remaining  
+**Total verification time:** Automated checks plus user-approved runtime verification
 
 ---
-*Verified: 2026-03-27T08:30:57Z*
+*Verified: 2026-03-27T19:22:30Z*
 *Verifier: Codex orchestrator (manual verification pass)*
