@@ -12,6 +12,7 @@ import type {
 
 export interface AppElements {
   root: HTMLElement;
+  dragHandle: HTMLElement;
   durationInput: HTMLInputElement;
   timerDisplay: HTMLElement;
   timerStatus: HTMLElement;
@@ -21,7 +22,6 @@ export interface AppElements {
   dismissButton: HTMLButtonElement;
   spikyButton: HTMLButtonElement;
   spikyImage: HTMLImageElement;
-  spikyFallback: HTMLElement;
   spikyCaption: HTMLElement;
 }
 
@@ -81,12 +81,9 @@ export function mountApp(
         </button>
       </section>
       <section class="pet-stage" aria-label="Spiky 데스크톱 펫 스테이지">
-        <div class="pet-stage__glow" aria-hidden="true"></div>
-        <div class="pet-stage__ground" aria-hidden="true"></div>
         <button class="pet-button" id="spiky-button" type="button" aria-label="Spiky 캐릭터">
           <span class="pet-sprite">
             <img class="pet-image" id="spiky-image" alt="" />
-            <span class="pet-fallback" id="spiky-fallback" hidden>PNG 에셋 필요</span>
           </span>
         </button>
         <p class="pet-caption" id="spiky-caption"></p>
@@ -96,6 +93,7 @@ export function mountApp(
 
   return {
     root,
+    dragHandle: queryElement(root, ".drag-handle"),
     durationInput: queryElement<HTMLInputElement>(root, "#timer-minutes"),
     timerDisplay: queryElement(root, "#timer-display"),
     timerStatus: queryElement(root, "#timer-status"),
@@ -105,7 +103,6 @@ export function mountApp(
     dismissButton: queryElement<HTMLButtonElement>(root, "#dismiss-button"),
     spikyButton: queryElement<HTMLButtonElement>(root, "#spiky-button"),
     spikyImage: queryElement<HTMLImageElement>(root, "#spiky-image"),
-    spikyFallback: queryElement(root, "#spiky-fallback"),
     spikyCaption: queryElement(root, "#spiky-caption")
   };
 }
@@ -136,12 +133,10 @@ export function renderApp(
 
 export function showImageFallback(elements: AppElements): void {
   elements.spikyImage.hidden = true;
-  elements.spikyFallback.hidden = false;
 }
 
 export function hideImageFallback(elements: AppElements): void {
   elements.spikyImage.hidden = false;
-  elements.spikyFallback.hidden = true;
 }
 
 function syncSpikyImage(
@@ -181,16 +176,18 @@ function getPetCaption(
   }
 
   if (walker.isWalking) {
-    return timerStatus === "running"
-      ? "집중 지키는 중. 데스크톱 순찰 중."
-      : "데스크톱 산책 중.";
+    return "데스크톱 산책 중.";
+  }
+
+  if (timerStatus === "running") {
+    return "스피키가 집중중이에요.";
   }
 
   if (timerStatus === "paused") {
-    return "잠깐 멈춰서 제자리에서 숨 고르는 중.";
+    return "잠깐 쉬는 중이에요.";
   }
 
-  return "스피키가 바닥 가까이 쉬며 다음 집중 시간을 기다리는 중.";
+  return "스피키가 쉬고 있어요.";
 }
 
 function queryElement<T extends HTMLElement = HTMLElement>(

@@ -11,7 +11,9 @@ const WINDOW_BOTTOM_MARGIN_PX = 28;
 export interface DesktopWalkBounds {
   minX: number;
   maxX: number;
-  y: number;
+  minY: number;
+  maxY: number;
+  defaultY: number;
 }
 
 export interface DesktopStartupPosition {
@@ -39,7 +41,9 @@ export class DesktopWindowController {
       minX,
       monitor.workArea.position.x + monitor.workArea.size.width - windowSize.width
     );
-    const y = Math.max(
+    const minY = monitor.workArea.position.y;
+    const maxY = Math.max(
+      minY,
       monitor.workArea.position.y,
       monitor.workArea.position.y +
         monitor.workArea.size.height -
@@ -50,7 +54,9 @@ export class DesktopWindowController {
     return {
       minX,
       maxX,
-      y
+      minY,
+      maxY,
+      defaultY: maxY
     };
   }
 
@@ -76,7 +82,7 @@ export class DesktopWindowController {
 
     return {
       x: (bounds.minX + bounds.maxX) / 2,
-      y: bounds.y
+      y: bounds.defaultY
     };
   }
 
@@ -90,6 +96,29 @@ export class DesktopWindowController {
     await this.setPosition(position.x, position.y);
 
     return position;
+  }
+
+  async startDragging(): Promise<void> {
+    if (!isTauri()) {
+      return;
+    }
+
+    await this.appWindow.startDragging();
+  }
+
+  async onMoved(
+    handler: (position: { x: number; y: number }) => void
+  ): Promise<() => void> {
+    if (!isTauri()) {
+      return () => {};
+    }
+
+    return this.appWindow.onMoved(({ payload }) => {
+      handler({
+        x: payload.x,
+        y: payload.y
+      });
+    });
   }
 
   async setPosition(x: number, y: number): Promise<void> {

@@ -47,6 +47,8 @@ export function bootstrap(root: HTMLElement): void {
   let previousTimerStatus = timer.getSnapshot().status;
 
   timer.subscribe((snapshot) => {
+    desktopWalker.setTimerStatus(snapshot.status);
+
     if (snapshot.status === "finished" && previousTimerStatus !== "finished") {
       spikyState.showTimerFinished();
       void audioPlayer.play("timerFinished");
@@ -62,6 +64,51 @@ export function bootstrap(root: HTMLElement): void {
   elements.durationInput.addEventListener("change", () => {
     timer.setDurationMinutes(Number(elements.durationInput.value));
     render();
+  });
+
+  elements.dragHandle.addEventListener("pointerdown", (event) => {
+    if (event.button !== 0) {
+      return;
+    }
+
+    const handleDragRelease = async (): Promise<void> => {
+      cleanupDragReleaseListeners();
+
+      const currentPosition = await windowController.getCurrentPosition();
+
+      if (currentPosition) {
+        desktopWalker.syncWindowPosition(currentPosition);
+      }
+
+      desktopWalker.endManualDrag();
+    };
+
+    const cleanupDragReleaseListeners = (): void => {
+      window.removeEventListener("pointerup", onPointerRelease, true);
+      window.removeEventListener("pointercancel", onPointerRelease, true);
+      window.removeEventListener("mouseup", onPointerRelease, true);
+      window.removeEventListener("blur", onWindowBlur);
+    };
+
+    const onPointerRelease = (): void => {
+      void handleDragRelease();
+    };
+
+    const onWindowBlur = (): void => {
+      void handleDragRelease();
+    };
+
+    desktopWalker.beginManualDrag();
+    window.addEventListener("pointerup", onPointerRelease, true);
+    window.addEventListener("pointercancel", onPointerRelease, true);
+    window.addEventListener("mouseup", onPointerRelease, true);
+    window.addEventListener("blur", onWindowBlur);
+
+    void windowController.startDragging().catch((error) => {
+      cleanupDragReleaseListeners();
+      desktopWalker.endManualDrag();
+      console.warn("Failed to drag window from handle.", error);
+    });
   });
 
   elements.startButton.addEventListener("click", () => {
@@ -104,6 +151,14 @@ export function bootstrap(root: HTMLElement): void {
     void audioPlayer.play("click");
   });
 
+  elements.spikyButton.addEventListener("pointerenter", () => {
+    desktopWalker.pauseForHover();
+  });
+
+  elements.spikyButton.addEventListener("pointerdown", () => {
+    desktopWalker.pauseForInteraction();
+  });
+
   void initializeDesktopShell(windowController, desktopWalker);
 }
 
@@ -112,6 +167,9 @@ async function initializeDesktopShell(
   desktopWalker: DesktopWalker
 ): Promise<void> {
   try {
+    await windowController.onMoved((position) => {
+      desktopWalker.syncWindowPosition(position);
+    });
     await windowController.placeAtStartup();
     await desktopWalker.start();
   } catch (error) {
