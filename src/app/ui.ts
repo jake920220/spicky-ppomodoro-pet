@@ -82,6 +82,7 @@ export function mountApp(
       </section>
       <section class="pet-stage" aria-label="Spiky 데스크톱 펫 스테이지">
         <div class="pet-stage__glow" aria-hidden="true"></div>
+        <div class="pet-stage__ground" aria-hidden="true"></div>
         <button class="pet-button" id="spiky-button" type="button" aria-label="Spiky 캐릭터">
           <span class="pet-sprite">
             <img class="pet-image" id="spiky-image" alt="" />
@@ -186,10 +187,10 @@ function getPetCaption(
   }
 
   if (timerStatus === "paused") {
-    return "잠깐 멈춰서 숨 고르는 중.";
+    return "잠깐 멈춰서 제자리에서 숨 고르는 중.";
   }
 
-  return "상단 도크에서 바로 타이머를 조절할 수 있어.";
+  return "스피키가 바닥 가까이 쉬며 다음 집중 시간을 기다리는 중.";
 }
 
 function queryElement<T extends HTMLElement = HTMLElement>(
