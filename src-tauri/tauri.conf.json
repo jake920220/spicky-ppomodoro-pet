@@ -1,0 +1,35 @@
+{
+  "productName": "Spiky",
+  "version": "0.1.0",
+  "identifier": "com.spiky.pet",
+  "build": {
+    "beforeDevCommand": "pnpm dev",
+    "beforeBuildCommand": "pnpm build",
+    "devUrl": "http://localhost:1420",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "withGlobalTauri": false,
+    "macOSPrivateApi": true,
+    "security": {
+      "capabilities": ["main-capability"]
+    },
+    "windows": [
+      {
+        "label": "main",
+        "title": "Spiky",
+        "width": 340,
+        "height": 460,
+        "center": false,
+        "resizable": false,
+        "maximizable": false,
+        "fullscreen": false,
+        "decorations": false,
+        "transparent": true,
+        "alwaysOnTop": true,
+        "visibleOnAllWorkspaces": true,
+        "shadow": false
+      }
+    ]
+  }
+}
