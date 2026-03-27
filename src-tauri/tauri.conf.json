@@ -1,5 +1,5 @@
 {
-  "productName": "Spiky",
+  "productName": "Spiky Ppomodoro pet",
   "version": "0.1.0",
   "identifier": "com.spiky.pet",
   "build": {
@@ -17,7 +17,7 @@
     "windows": [
       {
         "label": "main",
-        "title": "Spiky",
+        "title": "Spiky Ppomodoro pet",
         "width": 340,
         "height": 460,
         "center": false,

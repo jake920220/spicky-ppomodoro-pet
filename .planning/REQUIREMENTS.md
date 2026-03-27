@@ -1,7 +1,7 @@
-# Requirements: Spiky
+# Requirements: Spiky Ppomodoro pet
 
 **Defined:** 2026-03-27
-**Core Value:** Spiky must feel like a small desktop companion that makes focus sessions visible and playful without getting in the user's way.
+**Core Value:** Spiky Ppomodoro pet must feel like a small desktop companion that makes focus sessions visible and playful without getting in the user's way.
 
 ## v1 Requirements
 

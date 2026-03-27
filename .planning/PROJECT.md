@@ -1,12 +1,12 @@
-# Spiky
+# Spiky Ppomodoro pet
 
 ## What This Is
 
-Spiky is a lightweight desktop pet timer for macOS and Windows. It lives on top of the desktop as a small transparent companion, uses prepared PNG and MP3 assets for its states, and gives the user a playful Pomodoro flow instead of a heavy productivity dashboard. The current vision is a compact top control dock plus a pet that walks, reacts to clicks immediately, and announces focus-session completion clearly.
+Spiky Ppomodoro pet is a lightweight desktop pet timer for macOS and Windows. It lives on top of the desktop as a small transparent companion, uses prepared PNG and MP3 assets for its states, and gives the user a playful Pomodoro flow instead of a heavy productivity dashboard. The current vision is a compact top control dock plus a pet that walks, reacts to clicks immediately, and announces focus-session completion clearly.
 
 ## Core Value
 
-Spiky must feel like a small desktop companion that makes focus sessions visible and playful without getting in the user's way.
+Spiky Ppomodoro pet must feel like a small desktop companion that makes focus sessions visible and playful without getting in the user's way.
 
 ## Requirements
 

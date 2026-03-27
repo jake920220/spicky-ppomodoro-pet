@@ -1,13 +1,13 @@
 # Project Research Summary
 
-**Project:** Spiky
+**Project:** Spiky Ppomodoro pet
 **Domain:** desktop pet pomodoro timer
 **Researched:** 2026-03-27
 **Confidence:** HIGH
 
 ## Executive Summary
 
-Spiky sits at the intersection of two lightweight desktop product patterns: a local Pomodoro timer and a playful desktop pet overlay. The research strongly supports a small-scope Tauri 2 application with a transparent always-on-top window, a compact control dock, and a frontend-led behavior model that keeps timer logic, pet state, audio, and native window control separate.
+Spiky Ppomodoro pet sits at the intersection of two lightweight desktop product patterns: a local Pomodoro timer and a playful desktop pet overlay. The research strongly supports a small-scope Tauri 2 application with a transparent always-on-top window, a compact control dock, and a frontend-led behavior model that keeps timer logic, pet state, audio, and native window control separate.
 
 The recommended approach is to treat the "desktop companion that helps you focus" loop as the entire MVP. That means one visible pet, immediate click response, bounded left/right movement, a basic Pomodoro session flow, and a clear completion alert with conservative audio defaults. This aligns with the project's explicit exclusions around backend, cloud sync, mobile support, analytics, and LLM integration.
 

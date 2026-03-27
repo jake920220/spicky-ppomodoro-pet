@@ -1,8 +1,8 @@
-# Roadmap: Spiky
+# Roadmap: Spiky Ppomodoro pet
 
 ## Overview
 
-Spiky's roadmap moves from "correct overlay shell" to "believable companion behavior" to "reliable Pomodoro loop" and only then to cross-platform hardening. The goal is to validate the smallest local desktop pet timer that already feels like a companion, not a generic productivity app.
+Spiky Ppomodoro pet's roadmap moves from "correct overlay shell" to "believable companion behavior" to "reliable Pomodoro loop" and only then to cross-platform hardening. The goal is to validate the smallest local desktop pet timer that already feels like a companion, not a generic productivity app.
 
 ## Phases
 

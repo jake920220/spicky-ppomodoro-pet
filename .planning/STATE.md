@@ -20,7 +20,7 @@ progress:
 
 See: .planning/PROJECT.md (updated 2026-03-27)
 
-**Core value:** Spiky must feel like a small desktop companion that makes focus sessions visible and playful without getting in the user's way.
+**Core value:** Spiky Ppomodoro pet must feel like a small desktop companion that makes focus sessions visible and playful without getting in the user's way.
 **Current focus:** Phase 01 — overlay-shell-foundation (complete)
 
 ## Current Position
