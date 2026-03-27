@@ -1,0 +1,336 @@
+:root {
+  color: #f4f0e8;
+  font-family: "Avenir Next", "Pretendard Variable", "Noto Sans KR", sans-serif;
+  background: transparent;
+  color-scheme: only light;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  background: transparent;
+  overflow: hidden;
+}
+
+body {
+  user-select: none;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+#app {
+  display: grid;
+  align-items: stretch;
+  width: 100vw;
+  height: 100vh;
+  padding: 10px 10px 12px;
+}
+
+.app-shell {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 8px;
+  width: min(100%, 304px);
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.control-dock {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, rgba(31, 42, 34, 0.9), rgba(18, 27, 22, 0.92)),
+    rgba(12, 18, 14, 0.9);
+  box-shadow:
+    0 18px 42px rgba(4, 8, 6, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
+}
+
+.drag-handle {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  width: 100%;
+  min-height: 30px;
+  padding: 6px 10px;
+  border-radius: 12px;
+  background: rgba(215, 233, 198, 0.1);
+  color: rgba(244, 240, 232, 0.88);
+  cursor: grab;
+}
+
+.drag-handle__title {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.control-row {
+  display: grid;
+  grid-template-columns: 104px minmax(0, 1fr);
+  gap: 8px;
+  min-width: 0;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+.field-label {
+  color: rgba(244, 240, 232, 0.76);
+  font-size: 12px;
+}
+
+.field-input {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  background: rgba(8, 12, 10, 0.34);
+  color: inherit;
+}
+
+.timer-readout {
+  display: grid;
+  align-content: center;
+  min-width: 0;
+  min-height: 44px;
+  gap: 4px;
+  padding: 8px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  background: rgba(9, 13, 11, 0.28);
+}
+
+.timer-display {
+  margin: 0;
+  font-size: 38px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.06em;
+}
+
+.timer-status {
+  margin: 0;
+  color: rgba(244, 240, 232, 0.72);
+  font-size: 12px;
+}
+
+.timer-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.action-button {
+  min-height: 40px;
+  padding: 10px 9px;
+  border: none;
+  border-radius: 13px;
+  background: rgba(245, 241, 232, 0.12);
+  color: inherit;
+  cursor: pointer;
+  transition:
+    transform 120ms ease,
+    background-color 120ms ease,
+    opacity 120ms ease;
+}
+
+.action-button:hover:enabled,
+.pet-button:hover:enabled {
+  transform: translateY(-1px);
+}
+
+.action-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.action-button--primary {
+  background: #d9e7b2;
+  color: #112018;
+  font-weight: 700;
+}
+
+.action-button--warning {
+  background: #f6c982;
+  color: #24160a;
+  font-weight: 700;
+}
+
+.pet-stage {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  align-content: end;
+  min-height: 0;
+  overflow: hidden;
+  padding: 18px 0 8px;
+}
+
+.pet-stage::after {
+  content: "";
+  width: 212px;
+  height: 22px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(7, 10, 9, 0.42), rgba(7, 10, 9, 0));
+  filter: blur(3px);
+}
+
+.pet-stage__glow {
+  position: absolute;
+  bottom: 84px;
+  width: 236px;
+  height: 236px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, rgba(227, 242, 196, 0.2), rgba(227, 242, 196, 0.02) 55%, transparent 74%);
+  pointer-events: none;
+}
+
+.pet-button {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 196px;
+  aspect-ratio: 1;
+  margin-bottom: 14px;
+  border: none;
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at 50% 30%, rgba(244, 206, 142, 0.26), transparent 58%),
+    linear-gradient(180deg, rgba(52, 77, 64, 0.84), rgba(19, 29, 24, 0.92));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 18px 30px rgba(8, 12, 10, 0.26);
+  cursor: pointer;
+}
+
+.pet-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.9;
+}
+
+.pet-sprite {
+  display: grid;
+  place-items: center;
+  width: 160px;
+  height: 160px;
+  animation: idle-bob 2.4s ease-in-out infinite;
+}
+
+.pet-image,
+.pet-fallback {
+  width: 100%;
+  height: 100%;
+}
+
+.pet-image {
+  object-fit: contain;
+  transition: transform 180ms ease;
+}
+
+.pet-fallback {
+  display: grid;
+  place-items: center;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(244, 240, 232, 0.84);
+  font-size: 14px;
+  text-align: center;
+}
+
+.pet-caption {
+  margin: 0;
+  padding: 8px 12px;
+  max-width: min(100%, 232px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  background: rgba(14, 22, 18, 0.72);
+  color: rgba(244, 240, 232, 0.88);
+  font-size: 13px;
+  text-align: center;
+  backdrop-filter: blur(10px);
+}
+
+[data-pet-facing="left"] .pet-image {
+  transform: scaleX(-1);
+}
+
+[data-pet-walking="true"] .pet-sprite {
+  animation: walk-bob 0.5s ease-in-out infinite;
+}
+
+[data-spiky-state="clicked"] .pet-sprite {
+  animation-duration: 0.34s;
+}
+
+[data-spiky-state="clicked"] .pet-button {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 20px 34px rgba(8, 12, 10, 0.28),
+    0 0 0 1px rgba(217, 231, 178, 0.18);
+}
+
+[data-spiky-state="timer_finished"] .control-dock {
+  border-color: rgba(246, 201, 130, 0.46);
+  box-shadow:
+    0 18px 42px rgba(4, 8, 6, 0.35),
+    0 0 0 1px rgba(246, 201, 130, 0.14),
+    0 0 18px rgba(246, 201, 130, 0.18);
+}
+
+[data-spiky-state="timer_finished"] .pet-stage__glow {
+  background:
+    radial-gradient(circle, rgba(246, 201, 130, 0.24), rgba(246, 201, 130, 0.03) 56%, transparent 76%);
+}
+
+@keyframes idle-bob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-1.6deg);
+  }
+
+  50% {
+    transform: translateY(-7px) rotate(1.6deg);
+  }
+}
+
+@keyframes walk-bob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-2deg);
+  }
+
+  50% {
+    transform: translateY(-5px) rotate(2deg);
+  }
+}
