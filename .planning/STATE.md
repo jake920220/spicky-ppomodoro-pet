@@ -11,8 +11,8 @@ See: .planning/PROJECT.md (updated 2026-03-27)
 
 Phase: 1 of 4 (Overlay Shell Foundation)
 Plan: 0 of 3 in current phase
-Status: Ready to plan
-Last activity: 2026-03-27 — Phase 1 context captured with locked shell defaults
+Status: Ready to execute
+Last activity: 2026-03-27 — Phase 1 research and executable plans created
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -55,5 +55,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-27 00:00
-Stopped at: Phase 1 context gathered
-Resume file: .planning/phases/01-overlay-shell-foundation/01-CONTEXT.md
+Stopped at: Phase 1 planned; next step is execute-phase
+Resume file: .planning/phases/01-overlay-shell-foundation/01-01-PLAN.md
