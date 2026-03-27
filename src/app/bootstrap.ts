@@ -20,8 +20,6 @@ export function bootstrap(root: HTMLElement): void {
   const audioPlayer = new AudioPlayer(AUDIO_ASSET_BY_CUE);
   const elements = mountApp(root, DEFAULT_POMODORO_MINUTES);
 
-  let previousTimerStatus = timer.getSnapshot().status;
-
   const render = (): void => {
     renderApp(
       elements,
@@ -30,6 +28,23 @@ export function bootstrap(root: HTMLElement): void {
       desktopWalker.getSnapshot()
     );
   };
+
+  const renderInitialShell = (): void => {
+    hideImageFallback(elements);
+    render();
+  };
+
+  elements.spikyImage.addEventListener("load", () => {
+    hideImageFallback(elements);
+  });
+
+  elements.spikyImage.addEventListener("error", () => {
+    showImageFallback(elements);
+  });
+
+  renderInitialShell();
+
+  let previousTimerStatus = timer.getSnapshot().status;
 
   timer.subscribe((snapshot) => {
     if (snapshot.status === "finished" && previousTimerStatus !== "finished") {
@@ -88,16 +103,6 @@ export function bootstrap(root: HTMLElement): void {
     desktopWalker.reactToInteraction();
     void audioPlayer.play("click");
   });
-
-  elements.spikyImage.addEventListener("load", () => {
-    hideImageFallback(elements);
-  });
-
-  elements.spikyImage.addEventListener("error", () => {
-    showImageFallback(elements);
-  });
-
-  render();
 
   void initializeDesktopShell(windowController, desktopWalker);
 }

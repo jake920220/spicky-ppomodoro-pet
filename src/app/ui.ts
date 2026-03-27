@@ -1,4 +1,7 @@
-import { IMAGE_ASSET_BY_STATE } from "../shared/assets/manifest";
+import {
+  DEFAULT_IDLE_IMAGE_ASSET,
+  IMAGE_ASSET_BY_STATE
+} from "../shared/assets/manifest";
 import type {
   DesktopWalkerSnapshot,
   SpikyStateSnapshot,
@@ -120,8 +123,7 @@ export function renderApp(
   elements.durationInput.disabled = timer.status !== "idle";
   elements.timerDisplay.textContent = formatDuration(timer.remainingMs);
   elements.timerStatus.textContent = `타이머 상태: ${timerStatusLabels[timer.status]}`;
-  elements.spikyImage.src = IMAGE_ASSET_BY_STATE[spiky.visual];
-  elements.spikyImage.alt = visualStateLabels[spiky.visual];
+  syncSpikyImage(elements, spiky.visual);
   elements.spikyCaption.textContent = getPetCaption(timer.status, spiky.visual, walker);
   elements.spikyButton.disabled = spiky.isInteractionBlocked;
   elements.startButton.disabled = timer.status !== "idle";
@@ -139,6 +141,21 @@ export function showImageFallback(elements: AppElements): void {
 export function hideImageFallback(elements: AppElements): void {
   elements.spikyImage.hidden = false;
   elements.spikyFallback.hidden = true;
+}
+
+function syncSpikyImage(
+  elements: AppElements,
+  visualState: SpikyVisualState
+): void {
+  const nextAsset =
+    IMAGE_ASSET_BY_STATE[visualState] ?? DEFAULT_IDLE_IMAGE_ASSET;
+
+  if (elements.spikyImage.getAttribute("src") !== nextAsset) {
+    hideImageFallback(elements);
+    elements.spikyImage.src = nextAsset;
+  }
+
+  elements.spikyImage.alt = visualStateLabels[visualState];
 }
 
 function formatDuration(remainingMs: number): string {
