@@ -257,6 +257,10 @@ input {
   animation: walk-bob 0.5s ease-in-out infinite;
 }
 
+[data-pet-motion-mode="finished_alert"] .pet-sprite {
+  animation: finished-hop 0.78s cubic-bezier(0.37, 0, 0.2, 1) infinite;
+}
+
 [data-spiky-state="clicked"] .pet-sprite {
   animation-duration: 0.34s;
 }
@@ -292,5 +296,24 @@ input {
 
   50% {
     transform: translateY(-5px) rotate(2deg);
+  }
+}
+
+@keyframes finished-hop {
+  0%,
+  100% {
+    transform: translateY(0) scaleX(1);
+  }
+
+  24% {
+    transform: translateY(-20px) scaleX(1.02);
+  }
+
+  48% {
+    transform: translateY(0) scaleX(0.98);
+  }
+
+  70% {
+    transform: translateY(-11px) scaleX(1.01);
   }
 }

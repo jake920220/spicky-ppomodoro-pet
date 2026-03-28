@@ -12,6 +12,10 @@ import {
   showImageFallback
 } from "./ui";
 
+const CLICK_FALLBACK_BUFFER_MS = 400;
+const CLICK_FALLBACK_MIN_MS = 1_400;
+const TIMER_FINISHED_REPEAT_GAP_MS = 2_000;
+
 export function bootstrap(root: HTMLElement): void {
   const timer = new PomodoroTimer(DEFAULT_POMODORO_MINUTES);
   const spikyState = new SpikyStateController();
@@ -51,7 +55,13 @@ export function bootstrap(root: HTMLElement): void {
 
     if (snapshot.status === "finished" && previousTimerStatus !== "finished") {
       spikyState.showTimerFinished();
-      void audioPlayer.play("timerFinished");
+      audioPlayer.startRepeating("timerFinished", {
+        gapAfterEndedMs: TIMER_FINISHED_REPEAT_GAP_MS
+      });
+    }
+
+    if (snapshot.status !== "finished" && previousTimerStatus === "finished") {
+      audioPlayer.stop("timerFinished");
     }
 
     previousTimerStatus = snapshot.status;
@@ -129,26 +139,35 @@ export function bootstrap(root: HTMLElement): void {
   });
 
   elements.resetButton.addEventListener("click", () => {
+    audioPlayer.stopAll();
     timer.reset();
     spikyState.dismissTimerFinished();
-    audioPlayer.stopAll();
   });
 
   elements.dismissButton.addEventListener("click", () => {
+    audioPlayer.stop("timerFinished");
     timer.reset();
     spikyState.dismissTimerFinished();
-    audioPlayer.stop("timerFinished");
   });
 
   elements.spikyButton.addEventListener("click", () => {
-    const didChange = spikyState.triggerClick();
+    const didChange = spikyState.triggerClick(
+      Math.max(
+        CLICK_FALLBACK_MIN_MS,
+        (audioPlayer.getCueDurationMs("click") ?? 0) + CLICK_FALLBACK_BUFFER_MS
+      )
+    );
 
     if (!didChange) {
       return;
     }
 
     desktopWalker.reactToInteraction();
-    void audioPlayer.play("click");
+    void audioPlayer.play("click", {
+      onEnded: () => {
+        spikyState.restoreClickState();
+      }
+    });
   });
 
   elements.spikyButton.addEventListener("pointerenter", () => {

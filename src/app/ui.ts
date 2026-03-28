@@ -117,6 +117,7 @@ export function renderApp(
   elements.root.dataset.spikyState = spiky.visual;
   elements.root.dataset.petFacing = walker.facing;
   elements.root.dataset.petWalking = String(walker.isWalking);
+  elements.root.dataset.petMotionMode = walker.motionMode;
   elements.durationInput.value = String(Math.round(timer.totalMs / 60_000));
   elements.durationInput.disabled = timer.status !== "idle";
   elements.timerDisplay.textContent = formatDuration(timer.remainingMs);

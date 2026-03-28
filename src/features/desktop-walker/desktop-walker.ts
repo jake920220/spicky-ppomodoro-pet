@@ -1,5 +1,8 @@
-import type { TimerStatus } from "../../shared/types/state";
-import type { DesktopWalkerSnapshot } from "../../shared/types/state";
+import type {
+  DesktopWalkerSnapshot,
+  PetMotionMode,
+  TimerStatus
+} from "../../shared/types/state";
 import {
   DesktopWindowController,
   type DesktopWalkBounds
@@ -11,23 +14,24 @@ const WALK_STEP_INTERVAL_MS = 32;
 const WALK_SPEED_PX_PER_SECOND = 66;
 const WALK_EDGE_PADDING_PX = 36;
 const WALK_MIN_DISTANCE_PX = 72;
-const WALK_REST_MIN_MS = 5_000;
-const WALK_REST_MAX_MS = 10_000;
-const FOCUS_WALK_REST_MIN_MS = 12_000;
-const FOCUS_WALK_REST_MAX_MS = 22_000;
-const STARTUP_WALK_REST_MIN_MS = 2_500;
-const STARTUP_WALK_REST_MAX_MS = 6_000;
+const WALK_REST_MIN_MS = 9_000;
+const WALK_REST_MAX_MS = 18_000;
+const FOCUS_WALK_REST_MIN_MS = 24_000;
+const FOCUS_WALK_REST_MAX_MS = 40_000;
+const STARTUP_WALK_REST_MIN_MS = 3_000;
+const STARTUP_WALK_REST_MAX_MS = 8_000;
 const CLICK_REST_MS = 1_600;
 const HOVER_REST_MS = 900;
-const DRAG_RESUME_MIN_MS = 1_000;
-const DRAG_RESUME_MAX_MS = 2_500;
-const FOCUS_DRAG_RESUME_MIN_MS = 4_000;
-const FOCUS_DRAG_RESUME_MAX_MS = 8_000;
+const DRAG_RESUME_MIN_MS = 1_800;
+const DRAG_RESUME_MAX_MS = 3_600;
+const FOCUS_DRAG_RESUME_MIN_MS = 6_000;
+const FOCUS_DRAG_RESUME_MAX_MS = 12_000;
 
 export class DesktopWalker {
   private snapshot: DesktopWalkerSnapshot = {
     facing: "right",
-    isWalking: false
+    isWalking: false,
+    motionMode: "ambient"
   };
   private readonly listeners = new Set<DesktopWalkerListener>();
   private readonly windowController: DesktopWindowController;
@@ -38,7 +42,7 @@ export class DesktopWalker {
   private currentY = 0;
   private targetX = 0;
   private lastTickAt = 0;
-  private focusModeEnabled = false;
+  private timerStatus: TimerStatus = "idle";
   private interactionPauseTimeoutId: number | null = null;
   private manualDragActive = false;
 
@@ -83,20 +87,19 @@ export class DesktopWalker {
   }
 
   reactToInteraction(): void {
-    if (!this.bounds) {
+    if (!this.bounds || this.timerStatus === "finished") {
       return;
     }
 
     this.stopWalking();
-    this.snapshot = {
-      ...this.snapshot,
-      facing: this.snapshot.facing === "right" ? "left" : "right"
-    };
-    this.emit();
     this.pauseForInteraction(CLICK_REST_MS);
   }
 
   pauseForInteraction(durationMs = CLICK_REST_MS): void {
+    if (this.timerStatus === "finished") {
+      return;
+    }
+
     this.stopWalking();
 
     if (this.interactionPauseTimeoutId !== null) {
@@ -140,7 +143,24 @@ export class DesktopWalker {
   }
 
   setTimerStatus(status: TimerStatus): void {
-    this.focusModeEnabled = status === "running";
+    if (this.timerStatus === status) {
+      return;
+    }
+
+    const wasFinished = this.timerStatus === "finished";
+
+    this.timerStatus = status;
+
+    if (status === "finished") {
+      this.enterFinishedAlertMode();
+      return;
+    }
+
+    this.syncMotionMode();
+
+    if (wasFinished) {
+      this.queueNextWalk(this.getRestDuration());
+    }
   }
 
   stop(): void {
@@ -156,6 +176,10 @@ export class DesktopWalker {
   }
 
   private async refreshBoundsAndWalk(): Promise<void> {
+    if (this.timerStatus === "finished") {
+      return;
+    }
+
     const nextBounds = await this.windowController.resolveWalkBounds();
 
     if (!nextBounds) {
@@ -171,7 +195,7 @@ export class DesktopWalker {
   }
 
   private startWalking(): void {
-    if (!this.bounds || this.manualDragActive) {
+    if (!this.bounds || this.manualDragActive || this.timerStatus === "finished") {
       return;
     }
 
@@ -186,7 +210,8 @@ export class DesktopWalker {
     this.lastTickAt = performance.now();
     this.snapshot = {
       facing: nextTarget >= this.currentX ? "right" : "left",
-      isWalking: true
+      isWalking: true,
+      motionMode: this.resolveMotionMode()
     };
     this.emit();
 
@@ -258,7 +283,7 @@ export class DesktopWalker {
   }
 
   private getRestDuration(): number {
-    if (this.focusModeEnabled) {
+    if (this.timerStatus === "running") {
       return randomBetween(FOCUS_WALK_REST_MIN_MS, FOCUS_WALK_REST_MAX_MS);
     }
 
@@ -266,7 +291,7 @@ export class DesktopWalker {
   }
 
   private getDragResumeDuration(): number {
-    if (this.focusModeEnabled) {
+    if (this.timerStatus === "running") {
       return randomBetween(FOCUS_DRAG_RESUME_MIN_MS, FOCUS_DRAG_RESUME_MAX_MS);
     }
 
@@ -288,6 +313,35 @@ export class DesktopWalker {
       window.clearTimeout(this.interactionPauseTimeoutId);
       this.interactionPauseTimeoutId = null;
     }
+  }
+
+  private enterFinishedAlertMode(): void {
+    this.clearScheduledMovement();
+
+    this.snapshot = {
+      ...this.snapshot,
+      isWalking: false,
+      motionMode: "finished_alert"
+    };
+    this.emit();
+  }
+
+  private resolveMotionMode(): PetMotionMode {
+    return this.timerStatus === "running" ? "focus" : "ambient";
+  }
+
+  private syncMotionMode(): void {
+    const nextMotionMode = this.resolveMotionMode();
+
+    if (this.snapshot.motionMode === nextMotionMode) {
+      return;
+    }
+
+    this.snapshot = {
+      ...this.snapshot,
+      motionMode: nextMotionMode
+    };
+    this.emit();
   }
 
   private pickNextTarget(bounds: DesktopWalkBounds): number {
