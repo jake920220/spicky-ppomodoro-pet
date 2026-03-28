@@ -50,7 +50,9 @@ export function mountApp(
           data-tauri-drag-region
           aria-label="창 이동 핸들"
         >
-          <span class="drag-handle__title">Spiky Ppomodoro pet</span>
+          <span class="drag-handle__title" data-tauri-drag-region>
+            Spiky Ppomodoro pet
+          </span>
         </div>
         <div class="control-row">
           <label class="field" for="timer-minutes">

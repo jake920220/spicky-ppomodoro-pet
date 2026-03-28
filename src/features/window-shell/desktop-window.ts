@@ -87,23 +87,21 @@ export class DesktopWindowController {
   }
 
   async placeAtStartup(): Promise<DesktopStartupPosition | null> {
+    if (!isTauri()) {
+      return null;
+    }
+
     const position = await this.resolveStartupPosition();
 
     if (!position) {
+      await this.appWindow.show();
       return null;
     }
 
     await this.setPosition(position.x, position.y);
+    await this.appWindow.show();
 
     return position;
-  }
-
-  async startDragging(): Promise<void> {
-    if (!isTauri()) {
-      return;
-    }
-
-    await this.appWindow.startDragging();
   }
 
   async onMoved(

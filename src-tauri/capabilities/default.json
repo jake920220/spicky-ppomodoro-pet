@@ -8,7 +8,6 @@
     "core:event:default",
     "core:resources:default",
     "core:window:default",
-    "core:window:allow-set-position",
-    "core:window:allow-start-dragging"
+    "core:window:allow-set-position"
   ]
 }
