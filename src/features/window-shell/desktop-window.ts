@@ -110,16 +110,6 @@ export class DesktopWindowController {
     return position;
   }
 
-  async startDragging(): Promise<void> {
-    const appWindow = this.getAppWindow();
-
-    if (!appWindow) {
-      return;
-    }
-
-    await appWindow.startDragging();
-  }
-
   async onMoved(
     handler: (position: { x: number; y: number }) => void
   ): Promise<() => void> {
