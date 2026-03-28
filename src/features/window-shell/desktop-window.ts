@@ -92,13 +92,20 @@ export class DesktopWindowController {
   }
 
   async placeAtStartup(): Promise<DesktopStartupPosition | null> {
-    const position = await this.resolveStartupPosition();
+    const appWindow = this.getAppWindow();
 
-    if (!position) {
+    if (!appWindow) {
       return null;
     }
 
-    await this.setPosition(position.x, position.y);
+    const position = await this.resolveStartupPosition();
+
+    if (position) {
+      await this.setPosition(position.x, position.y);
+    }
+
+    await appWindow.show();
+    await appWindow.setFocus();
 
     return position;
   }
