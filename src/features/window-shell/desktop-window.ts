@@ -1,4 +1,3 @@
-import { isTauri } from "@tauri-apps/api/core";
 import { PhysicalPosition } from "@tauri-apps/api/dpi";
 import {
   currentMonitor,
@@ -8,6 +7,10 @@ import {
 } from "@tauri-apps/api/window";
 
 const WINDOW_BOTTOM_MARGIN_PX = 28;
+
+function hasTauriWindowContext(): boolean {
+  return typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
+}
 
 export interface DesktopWalkBounds {
   minX: number;
@@ -140,7 +143,7 @@ export class DesktopWindowController {
   }
 
   private getAppWindow(): Window | null {
-    if (!isTauri()) {
+    if (!hasTauriWindowContext()) {
       return null;
     }
 
