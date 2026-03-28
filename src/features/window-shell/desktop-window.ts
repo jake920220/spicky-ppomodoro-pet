@@ -122,6 +122,16 @@ export class DesktopWindowController {
     });
   }
 
+  async startDragging(): Promise<void> {
+    const appWindow = this.getAppWindow();
+
+    if (!appWindow) {
+      return;
+    }
+
+    await appWindow.startDragging();
+  }
+
   async setPosition(x: number, y: number): Promise<void> {
     if (!hasTauriWindowContext()) {
       return;

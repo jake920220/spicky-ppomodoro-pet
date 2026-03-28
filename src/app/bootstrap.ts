@@ -66,8 +66,8 @@ export function bootstrap(root: HTMLElement): void {
     render();
   });
 
-  elements.dragHandle.addEventListener("pointerdown", (event) => {
-    if (event.button !== 0) {
+  elements.dragHandle.addEventListener("mousedown", (event) => {
+    if (event.buttons !== 1) {
       return;
     }
 
@@ -103,6 +103,12 @@ export function bootstrap(root: HTMLElement): void {
     window.addEventListener("pointercancel", onPointerRelease, true);
     window.addEventListener("mouseup", onPointerRelease, true);
     window.addEventListener("blur", onWindowBlur);
+
+    void windowController.startDragging().catch((error) => {
+      cleanupDragReleaseListeners();
+      desktopWalker.endManualDrag();
+      console.warn("Failed to drag window from handle.", error);
+    });
   });
 
   elements.startButton.addEventListener("click", () => {
