@@ -3,7 +3,8 @@ import { PhysicalPosition } from "@tauri-apps/api/dpi";
 import {
   currentMonitor,
   getCurrentWindow,
-  primaryMonitor
+  primaryMonitor,
+  type Window
 } from "@tauri-apps/api/window";
 
 const WINDOW_BOTTOM_MARGIN_PX = 28;
@@ -22,10 +23,12 @@ export interface DesktopStartupPosition {
 }
 
 export class DesktopWindowController {
-  private readonly appWindow = getCurrentWindow();
+  private appWindow: Window | null = null;
 
   async resolveWalkBounds(): Promise<DesktopWalkBounds | null> {
-    if (!isTauri()) {
+    const appWindow = this.getAppWindow();
+
+    if (!appWindow) {
       return null;
     }
 
@@ -35,7 +38,7 @@ export class DesktopWindowController {
       return null;
     }
 
-    const windowSize = await this.appWindow.outerSize();
+    const windowSize = await appWindow.outerSize();
     const minX = monitor.workArea.position.x;
     const maxX = Math.max(
       minX,
@@ -61,11 +64,13 @@ export class DesktopWindowController {
   }
 
   async getCurrentPosition(): Promise<{ x: number; y: number } | null> {
-    if (!isTauri()) {
+    const appWindow = this.getAppWindow();
+
+    if (!appWindow) {
       return null;
     }
 
-    const position = await this.appWindow.outerPosition();
+    const position = await appWindow.outerPosition();
 
     return {
       x: position.x,
@@ -99,21 +104,25 @@ export class DesktopWindowController {
   }
 
   async startDragging(): Promise<void> {
-    if (!isTauri()) {
+    const appWindow = this.getAppWindow();
+
+    if (!appWindow) {
       return;
     }
 
-    await this.appWindow.startDragging();
+    await appWindow.startDragging();
   }
 
   async onMoved(
     handler: (position: { x: number; y: number }) => void
   ): Promise<() => void> {
-    if (!isTauri()) {
+    const appWindow = this.getAppWindow();
+
+    if (!appWindow) {
       return () => {};
     }
 
-    return this.appWindow.onMoved(({ payload }) => {
+    return appWindow.onMoved(({ payload }) => {
       handler({
         x: payload.x,
         y: payload.y
@@ -122,12 +131,32 @@ export class DesktopWindowController {
   }
 
   async setPosition(x: number, y: number): Promise<void> {
-    if (!isTauri()) {
+    const appWindow = this.getAppWindow();
+
+    if (!appWindow) {
       return;
     }
 
-    await this.appWindow.setPosition(
+    await appWindow.setPosition(
       new PhysicalPosition(Math.round(x), Math.round(y))
     );
+  }
+
+  private getAppWindow(): Window | null {
+    if (!isTauri()) {
+      return null;
+    }
+
+    if (this.appWindow) {
+      return this.appWindow;
+    }
+
+    try {
+      this.appWindow = getCurrentWindow();
+      return this.appWindow;
+    } catch (error) {
+      console.warn("Failed to access current Tauri window during startup.", error);
+      return null;
+    }
   }
 }
