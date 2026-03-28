@@ -13,7 +13,7 @@ Spiky Ppomodoro pet's roadmap moves from "correct overlay shell" to "believable 
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Overlay Shell Foundation** - Create the transparent desktop shell, top control dock, and default pet presence.
-- [ ] **Phase 2: Pet Motion & Click Personality** - Make Spiky walk like a desktop companion and react instantly to clicks.
+- [x] **Phase 2: Pet Motion & Click Personality** - Make Spiky walk like a desktop companion and react instantly to clicks.
 - [ ] **Phase 3: Pomodoro Feedback Loop** - Connect the pet to the focus-session timer and completion cues.
 - [ ] **Phase 4: Cross-Platform Hardening** - Validate and stabilize the local-only experience on both desktop targets.
 
@@ -49,8 +49,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 02-01: Implement bounded desktop walking and movement-direction presentation
-- [ ] 02-02: Implement click interaction state timing and click sound behavior
+- [x] 02-01: Implement bounded desktop walking and movement-direction presentation
+- [x] 02-02: Implement click interaction state timing and click sound behavior
 
 ### Phase 3: Pomodoro Feedback Loop
 **Goal**: Attach the desktop pet to a clear Pomodoro session loop with readable state, strong completion feedback, and conservative sound defaults.
@@ -92,6 +92,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Overlay Shell Foundation | 3/3 | Complete | 2026-03-27 |
-| 2. Pet Motion & Click Personality | 0/2 | Not started | - |
+| 2. Pet Motion & Click Personality | 2/2 | Complete | 2026-03-28 |
 | 3. Pomodoro Feedback Loop | 0/3 | Not started | - |
 | 4. Cross-Platform Hardening | 0/1 | Not started | - |
