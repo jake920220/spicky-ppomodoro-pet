@@ -1,4 +1,3 @@
-import { isTauri } from "@tauri-apps/api/core";
 import { PhysicalPosition } from "@tauri-apps/api/dpi";
 import {
   currentMonitor,
@@ -7,6 +6,10 @@ import {
 } from "@tauri-apps/api/window";
 
 const WINDOW_BOTTOM_MARGIN_PX = 28;
+
+function hasTauriWindowContext(): boolean {
+  return typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
+}
 
 export interface DesktopWalkBounds {
   minX: number;
@@ -25,7 +28,7 @@ export class DesktopWindowController {
   private readonly appWindow = getCurrentWindow();
 
   async resolveWalkBounds(): Promise<DesktopWalkBounds | null> {
-    if (!isTauri()) {
+    if (!hasTauriWindowContext()) {
       return null;
     }
 
@@ -61,7 +64,7 @@ export class DesktopWindowController {
   }
 
   async getCurrentPosition(): Promise<{ x: number; y: number } | null> {
-    if (!isTauri()) {
+    if (!hasTauriWindowContext()) {
       return null;
     }
 
@@ -87,7 +90,7 @@ export class DesktopWindowController {
   }
 
   async placeAtStartup(): Promise<DesktopStartupPosition | null> {
-    if (!isTauri()) {
+    if (!hasTauriWindowContext()) {
       return null;
     }
 
@@ -107,7 +110,7 @@ export class DesktopWindowController {
   async onMoved(
     handler: (position: { x: number; y: number }) => void
   ): Promise<() => void> {
-    if (!isTauri()) {
+    if (!hasTauriWindowContext()) {
       return () => {};
     }
 
@@ -120,7 +123,7 @@ export class DesktopWindowController {
   }
 
   async setPosition(x: number, y: number): Promise<void> {
-    if (!isTauri()) {
+    if (!hasTauriWindowContext()) {
       return;
     }
 
