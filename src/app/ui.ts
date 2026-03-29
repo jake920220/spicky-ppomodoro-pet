@@ -55,7 +55,7 @@ export function mountApp(
         </div>
         <div class="control-row">
           <label class="field" for="timer-minutes">
-            <span class="field-label">뽀모도로 분</span>
+            <span class="field-label">시간 설정 (기본 25분)</span>
             <input
               class="field-input"
               id="timer-minutes"
@@ -174,7 +174,7 @@ function getPetCaption(
   }
 
   if (visualState === "clicked") {
-    return "찌릿. 방금 건드렸어.";
+    return "스피키 네르지마세요!";
   }
 
   if (walker.isWalking) {

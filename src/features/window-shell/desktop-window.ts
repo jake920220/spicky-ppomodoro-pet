@@ -1,12 +1,15 @@
-import { PhysicalPosition } from "@tauri-apps/api/dpi";
+import { PhysicalPosition, PhysicalSize } from "@tauri-apps/api/dpi";
 import {
   currentMonitor,
   getCurrentWindow,
   primaryMonitor,
   type Window
 } from "@tauri-apps/api/window";
+import type { TimerStatus } from "../../shared/types/state";
 
 const WINDOW_BOTTOM_MARGIN_PX = 28;
+const DEFAULT_WINDOW_HEIGHT_PX = 460;
+const FINISHED_WINDOW_HEIGHT_PX = 508;
 
 function hasTauriWindowContext(): boolean {
   return typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
@@ -27,6 +30,7 @@ export interface DesktopStartupPosition {
 
 export class DesktopWindowController {
   private appWindow: Window | null = null;
+  private isFinishedLayoutApplied = false;
 
   async resolveWalkBounds(): Promise<DesktopWalkBounds | null> {
     const appWindow = this.getAppWindow();
@@ -137,6 +141,51 @@ export class DesktopWindowController {
     }
 
     await appWindow.startDragging();
+  }
+
+  async syncLayoutForTimerStatus(
+    status: TimerStatus
+  ): Promise<{ x: number; y: number } | null> {
+    const appWindow = this.getAppWindow();
+
+    if (!appWindow) {
+      return null;
+    }
+
+    const shouldApplyFinishedLayout = status === "finished";
+
+    if (shouldApplyFinishedLayout === this.isFinishedLayoutApplied) {
+      return this.getCurrentPosition();
+    }
+
+    const currentPosition = await this.getCurrentPosition();
+    const currentSize = await appWindow.outerSize();
+    const targetHeight = shouldApplyFinishedLayout
+      ? FINISHED_WINDOW_HEIGHT_PX
+      : DEFAULT_WINDOW_HEIGHT_PX;
+
+    if (currentSize.height === targetHeight) {
+      this.isFinishedLayoutApplied = shouldApplyFinishedLayout;
+      return currentPosition;
+    }
+
+    await appWindow.setSize(
+      new PhysicalSize(currentSize.width, targetHeight)
+    );
+
+    if (!currentPosition) {
+      this.isFinishedLayoutApplied = shouldApplyFinishedLayout;
+      return null;
+    }
+
+    const nextPosition = {
+      x: currentPosition.x,
+      y: currentPosition.y - (targetHeight - currentSize.height)
+    };
+
+    await this.setPosition(nextPosition.x, nextPosition.y);
+    this.isFinishedLayoutApplied = shouldApplyFinishedLayout;
+    return nextPosition;
   }
 
   async setPosition(x: number, y: number): Promise<void> {

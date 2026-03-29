@@ -14,7 +14,7 @@ import {
 
 const CLICK_FALLBACK_BUFFER_MS = 400;
 const CLICK_FALLBACK_MIN_MS = 1_400;
-const TIMER_FINISHED_REPEAT_GAP_MS = 2_000;
+const TIMER_FINISHED_REPEAT_GAP_MS = 1_000;
 
 export function bootstrap(root: HTMLElement): void {
   const timer = new PomodoroTimer(DEFAULT_POMODORO_MINUTES);
@@ -62,6 +62,19 @@ export function bootstrap(root: HTMLElement): void {
 
     if (snapshot.status !== "finished" && previousTimerStatus === "finished") {
       audioPlayer.stop("timerFinished");
+    }
+
+    if (snapshot.status !== previousTimerStatus) {
+      void windowController
+        .syncLayoutForTimerStatus(snapshot.status)
+        .then((position) => {
+          if (position) {
+            desktopWalker.syncWindowPosition(position);
+          }
+        })
+        .catch((error) => {
+          console.warn("Failed to sync timer-finished window layout.", error);
+        });
     }
 
     previousTimerStatus = snapshot.status;
