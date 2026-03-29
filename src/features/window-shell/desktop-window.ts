@@ -8,8 +8,7 @@ import {
 import type { TimerStatus } from "../../shared/types/state";
 
 const WINDOW_BOTTOM_MARGIN_PX = 28;
-const DEFAULT_WINDOW_HEIGHT_PX = 460;
-const FINISHED_WINDOW_HEIGHT_PX = 508;
+const FINISHED_LAYOUT_EXTRA_HEIGHT_PX = 48;
 
 function hasTauriWindowContext(): boolean {
   return typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
@@ -30,6 +29,7 @@ export interface DesktopStartupPosition {
 
 export class DesktopWindowController {
   private appWindow: Window | null = null;
+  private baseWindowHeight: number | null = null;
   private isFinishedLayoutApplied = false;
 
   async resolveWalkBounds(): Promise<DesktopWalkBounds | null> {
@@ -112,7 +112,6 @@ export class DesktopWindowController {
     }
 
     await appWindow.show();
-    await appWindow.setFocus();
     return position;
   }
 
@@ -160,9 +159,10 @@ export class DesktopWindowController {
 
     const currentPosition = await this.getCurrentPosition();
     const currentSize = await appWindow.outerSize();
+    const baseWindowHeight = this.getBaseWindowHeight(currentSize.height);
     const targetHeight = shouldApplyFinishedLayout
-      ? FINISHED_WINDOW_HEIGHT_PX
-      : DEFAULT_WINDOW_HEIGHT_PX;
+      ? baseWindowHeight + FINISHED_LAYOUT_EXTRA_HEIGHT_PX
+      : baseWindowHeight;
 
     if (currentSize.height === targetHeight) {
       this.isFinishedLayoutApplied = shouldApplyFinishedLayout;
@@ -178,9 +178,18 @@ export class DesktopWindowController {
       return null;
     }
 
+    const resizedBounds = await this.resolveWalkBounds();
     const nextPosition = {
-      x: currentPosition.x,
-      y: currentPosition.y - (targetHeight - currentSize.height)
+      x: resizedBounds
+        ? clamp(currentPosition.x, resizedBounds.minX, resizedBounds.maxX)
+        : currentPosition.x,
+      y: resizedBounds
+        ? clamp(
+            currentPosition.y - (targetHeight - currentSize.height),
+            resizedBounds.minY,
+            resizedBounds.maxY
+          )
+        : currentPosition.y - (targetHeight - currentSize.height)
     };
 
     await this.setPosition(nextPosition.x, nextPosition.y);
@@ -217,4 +226,16 @@ export class DesktopWindowController {
       return null;
     }
   }
+
+  private getBaseWindowHeight(currentHeight: number): number {
+    if (this.baseWindowHeight === null || !this.isFinishedLayoutApplied) {
+      this.baseWindowHeight = currentHeight;
+    }
+
+    return this.baseWindowHeight;
+  }
+}
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, value));
 }
