@@ -4,8 +4,8 @@ milestone: v1.0
 milestone_name: milestone
 status: completed
 stopped_at: Completed 02-02-PLAN.md
-last_updated: "2026-03-28T04:30:23Z"
-last_activity: 2026-03-28 -- Completed Phase 02 pet motion click personality
+last_updated: "2026-03-29T10:46:17.376Z"
+last_activity: "2026-03-29 -- Phase 02 shipped (PR #5)"
 progress:
   total_phases: 4
   completed_phases: 2
@@ -27,8 +27,8 @@ See: .planning/PROJECT.md (updated 2026-03-27)
 
 Phase: 02 (pet-motion-click-personality) — COMPLETE
 Plan: 2 of 2
-Status: Phase 02 complete
-Last activity: 2026-03-28 -- Completed Phase 02 pet motion click personality
+Status: Phase 02 shipped — PR #5
+Last activity: 2026-03-29 -- Phase 02 shipped (PR #5)
 
 Progress: [██████████] 100%
 
