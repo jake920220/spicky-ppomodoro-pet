@@ -47,10 +47,9 @@ export function mountApp(
       <section class="control-dock" aria-label="타이머 컨트롤 도크">
         <div
           class="drag-handle"
-          data-tauri-drag-region
           aria-label="창 이동 핸들"
         >
-          <span class="drag-handle__title" data-tauri-drag-region>
+          <span class="drag-handle__title">
             Spiky Ppomodoro pet
           </span>
         </div>

@@ -109,7 +109,6 @@ export class DesktopWindowController {
 
     await appWindow.show();
     await appWindow.setFocus();
-
     return position;
   }
 
@@ -128,6 +127,16 @@ export class DesktopWindowController {
         y: payload.y
       });
     });
+  }
+
+  async startDragging(): Promise<void> {
+    const appWindow = this.getAppWindow();
+
+    if (!appWindow) {
+      return;
+    }
+
+    await appWindow.startDragging();
   }
 
   async setPosition(x: number, y: number): Promise<void> {
