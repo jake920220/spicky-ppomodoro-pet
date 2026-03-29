@@ -1,6 +1,9 @@
 name: Build Windows Unsigned Installer
 
 on:
+  push:
+    branches:
+      - phase-02-pet-motion-click-personality
   workflow_dispatch:
     inputs:
       release_tag:
