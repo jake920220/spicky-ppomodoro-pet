@@ -1,10 +1,8 @@
-import type {
-  SpikyStateSnapshot
-} from "../../shared/types/state";
+import type { SpikyStateSnapshot } from "../../shared/types/state";
 
 type SpikyStateListener = (snapshot: SpikyStateSnapshot) => void;
 
-const CLICK_STATE_DURATION_MS = 1_200;
+const CLICK_STATE_FALLBACK_MS = 1_600;
 
 function createIdleSnapshot(): SpikyStateSnapshot {
   return {
@@ -16,7 +14,7 @@ function createIdleSnapshot(): SpikyStateSnapshot {
 export class SpikyStateController {
   private snapshot: SpikyStateSnapshot = createIdleSnapshot();
   private readonly listeners = new Set<SpikyStateListener>();
-  private clickTimeoutId: number | null = null;
+  private clickFallbackTimeoutId: number | null = null;
 
   getSnapshot(): SpikyStateSnapshot {
     return this.snapshot;
@@ -30,29 +28,35 @@ export class SpikyStateController {
     };
   }
 
-  triggerClick(): boolean {
+  triggerClick(fallbackDurationMs = CLICK_STATE_FALLBACK_MS): boolean {
     if (this.snapshot.isInteractionBlocked) {
       return false;
     }
 
-    this.clearClickTimeout();
+    this.clearClickFallback();
     this.snapshot = {
       visual: "clicked",
       isInteractionBlocked: false
     };
     this.emit();
 
-    this.clickTimeoutId = window.setTimeout(() => {
-      this.snapshot = createIdleSnapshot();
-      this.emit();
-      this.clickTimeoutId = null;
-    }, CLICK_STATE_DURATION_MS);
+    this.clickFallbackTimeoutId = window.setTimeout(() => {
+      this.restoreDefaultState();
+    }, fallbackDurationMs);
 
     return true;
   }
 
+  restoreClickState(): void {
+    if (this.snapshot.visual !== "clicked") {
+      return;
+    }
+
+    this.restoreDefaultState();
+  }
+
   showTimerFinished(): void {
-    this.clearClickTimeout();
+    this.clearClickFallback();
     this.snapshot = {
       visual: "timer_finished",
       isInteractionBlocked: true
@@ -61,15 +65,19 @@ export class SpikyStateController {
   }
 
   dismissTimerFinished(): void {
-    this.clearClickTimeout();
+    this.restoreDefaultState();
+  }
+
+  private restoreDefaultState(): void {
+    this.clearClickFallback();
     this.snapshot = createIdleSnapshot();
     this.emit();
   }
 
-  private clearClickTimeout(): void {
-    if (this.clickTimeoutId !== null) {
-      window.clearTimeout(this.clickTimeoutId);
-      this.clickTimeoutId = null;
+  private clearClickFallback(): void {
+    if (this.clickFallbackTimeoutId !== null) {
+      window.clearTimeout(this.clickFallbackTimeoutId);
+      this.clickFallbackTimeoutId = null;
     }
   }
 

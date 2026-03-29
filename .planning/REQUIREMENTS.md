@@ -14,8 +14,8 @@
 ### Pet Presence
 
 - [x] **PET-01**: User sees Spiky in its default idle state using `image_1` when the app is ready.
-- [ ] **PET-02**: Spiky patrols horizontally within visible desktop bounds and visually reflects its movement direction.
-- [ ] **PET-03**: Clicking Spiky immediately switches it to the interaction state using `image_2`, then returns it to idle.
+- [x] **PET-02**: Spiky patrols horizontally within visible desktop bounds and visually reflects its movement direction.
+- [x] **PET-03**: Clicking Spiky immediately switches it to the interaction state using `image_2`, then returns it to idle.
 
 ### Timer
 
@@ -27,7 +27,7 @@
 
 ### Audio
 
-- [ ] **AUD-01**: Clicking Spiky plays MP3 1 once without overlapping repeated click audio.
+- [x] **AUD-01**: Clicking Spiky plays MP3 1 once without overlapping repeated click audio.
 - [ ] **AUD-02**: Timer completion plays MP3 2 once without overlapping repeated completion audio.
 - [ ] **AUD-03**: Spiky's default cue playback volume is 50% of full volume.
 
@@ -72,9 +72,9 @@
 | DESK-02 | Phase 1 | Complete |
 | DESK-03 | Phase 1 | Complete |
 | PET-01 | Phase 1 | Complete |
-| PET-02 | Phase 2 | Pending |
-| PET-03 | Phase 2 | Pending |
-| AUD-01 | Phase 2 | Pending |
+| PET-02 | Phase 2 | Complete |
+| PET-03 | Phase 2 | Complete |
+| AUD-01 | Phase 2 | Complete |
 | TIME-01 | Phase 3 | Pending |
 | TIME-02 | Phase 3 | Pending |
 | TIME-03 | Phase 3 | Pending |
@@ -91,4 +91,4 @@
 
 ---
 *Requirements defined: 2026-03-27*
-*Last updated: 2026-03-27 after initial definition*
+*Last updated: 2026-03-28 after Phase 02 completion*
