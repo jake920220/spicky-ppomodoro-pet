@@ -4,8 +4,8 @@ milestone: v1.0
 milestone_name: milestone
 status: completed
 stopped_at: Completed 01-03-PLAN.md
-last_updated: "2026-03-27T08:29:32Z"
-last_activity: 2026-03-27 -- Completed Phase 01 overlay shell foundation
+last_updated: "2026-03-29T09:57:13.398Z"
+last_activity: "2026-03-29 -- Phase 01 shipped — PR #4 merged"
 progress:
   total_phases: 4
   completed_phases: 1
@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-03-27)
 Phase: 01 (overlay-shell-foundation) — COMPLETE
 Plan: 3 of 3
 Status: Phase 01 complete
-Last activity: 2026-03-27 -- Completed Phase 01 overlay shell foundation
+Last activity: 2026-03-29 -- Phase 01 shipped — PR #4 merged
 
 Progress: [██████████] 100%
 
